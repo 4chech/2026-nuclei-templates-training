@@ -1,0 +1,29 @@
+id: first_template
+
+info:
+  name: First Template
+  author: XI
+  severity: critical
+  description: My first nuclei template for my article
+  reference: https://XI
+  tags: first, cve, learn, nuclei
+
+http:
+  - method: GET
+    path: 
+      - "{{BaseURL}}/cve_proof"
+
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        words:
+          - "HackMe{"
+    
+    extractors:
+      - type: regex
+        name: extracted-flag
+        part: body
+        regex:
+          - "HackMe\\{[a-zA-Z0-9_]+\\}"

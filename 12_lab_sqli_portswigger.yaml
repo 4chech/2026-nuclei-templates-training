@@ -1,0 +1,28 @@
+id: 12_lab_sqli_portswigger
+
+info:
+  name: Blind SQL injection with conditional errors
+  author: XI
+  severity: high
+  description: Blind SQL injection with conditional errors
+  reference: https://XI
+  tags: portswigger, learn, nuclei, SQLi
+
+http:
+  - method: GET
+    path:
+      - "{BaseURL}"
+    headers:
+      - Cookie:
+        Cookie: {{TrackingID}}
+
+
+
+    payloads:
+      ErrorPoC: 
+        - "'"
+        
+    matchers:
+      - type: status
+        status:
+          - 500

